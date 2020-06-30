@@ -1,0 +1,37 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/home_page_toolbar" />
+
+    <FrameLayout
+        android:id="@+id/fl_store_body"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <RadioGroup
+        android:id="@+id/rg_store_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/main_button_border"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="@dimen/dp_5">
+
+        <RadioButton
+            android:id="@+id/rb_store_home"
+            style="@style/mainButton"
+            android:checked="true"
+            android:drawableTop="@drawable/fragment_store_home_selector"
+            android:text="首页" />
+
+        <RadioButton
+            android:id="@+id/rb_store_search"
+            style="@style/mainButton"
+            android:drawableTop="@drawable/fragment_store_selector"
+            android:text="搜索" />
+    </RadioGroup>
+
+</LinearLayout>
