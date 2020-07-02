@@ -11,7 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,9 +24,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.gson.Gson;
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.cache.CacheMode;
+import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.db.DownloadManager;
 import com.lzy.okgo.model.Progress;
+import com.lzy.okgo.model.Response;
 import com.lzy.okgo.request.GetRequest;
 import com.lzy.okserver.OkDownload;
 import com.lzy.okserver.download.DownloadListener;
@@ -37,15 +44,18 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.io.File;
 import java.util.List;
 
-import top.lhjjjlxays.appstore.bean.PackageInfo;
+import top.lhjjjlxays.appstore.bean.ApkDetail;
+import top.lhjjjlxays.appstore.bean.ApkGeneral;
 import top.lhjjjlxays.appstore.util.ApkUtils;
 import top.lhjjjlxays.appstore.util.GlideSizeTransformUtil;
+import top.lhjjjlxays.appstore.util.NetworkUtils;
 
 public class AppInfoActivity extends AppCompatActivity implements View.OnClickListener {
     private String TAG = AppInfoActivity.class.getSimpleName();
 
     private Context mContext;
-    private PackageInfo packageInfo;
+    private ApkGeneral apkGeneral;
+    private ApkDetail apkDetail;
     private DownloadTask task;
     private String tag;
 
@@ -61,6 +71,8 @@ public class AppInfoActivity extends AppCompatActivity implements View.OnClickLi
     private ExpandableTextView et_apk_introduce;
     private ExpandableTextView et_version_feature;
     private TextView tv_apk_developer;
+    private LinearLayout ll_apk_hide;
+    private ProgressBar pb_apk_loading;
 
     private Button btn_apk_download;
 
@@ -74,8 +86,7 @@ public class AppInfoActivity extends AppCompatActivity implements View.OnClickLi
         EventBus.getDefault().register(this);
 
         initFindView();
-        setInfo();
-        init();
+        initializeByOkGo();
     }
 
     public void initFindView() {
@@ -93,6 +104,8 @@ public class AppInfoActivity extends AppCompatActivity implements View.OnClickLi
         et_version_feature = findViewById(R.id.et_version_feature);
         tv_apk_developer = findViewById(R.id.tv_apk_developer);
         btn_apk_download = findViewById(R.id.btn_apk_download);
+        ll_apk_hide = findViewById(R.id.ll_apk_hide);
+        pb_apk_loading = findViewById(R.id.pb_apk_loading);
 
         btn_apk_download.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,31 +116,21 @@ public class AppInfoActivity extends AppCompatActivity implements View.OnClickLi
 
         findViewById(R.id.tv_apk_permission).setOnClickListener(this);
         findViewById(R.id.iv_back).setOnClickListener(this);
-    }
 
-    public void setInfo() {
+        //设置已知标签
         Glide.with(mContext)
                 .asBitmap()
                 .apply(RequestOptions.bitmapTransform(new RoundedCorners(25)))
-                .load(packageInfo.getApk_icon())
+                .load(apkGeneral.getApk_icon())
                 .into(iv_apk_icon);
-        tv_apk_name.setText(packageInfo.getApk_name());
-        tv_apk_grade.setText(stringFormat(packageInfo.getApk_grade()));
-        tv_apk_size.setText(packageInfo.getApk_size());
-        tv_evaluate_number.setText(packageInfo.getEvaluate_number());
 
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(mContext, packageInfo.getApk_screenshots());
-        rv_apk_screenshots.setAdapter(adapter);
-        rv_apk_screenshots.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
+        tv_apk_name.setText(apkGeneral.getApk_name());
+        tv_apk_grade.setText(stringFormat(apkGeneral.getApk_grade()));
+        tv_apk_size.setText(apkGeneral.getApk_size());
 
-        tv_update_date.setText(packageInfo.getData_update() + " 更新");
-        tv_apk_version.setText(packageInfo.getApk_version() + " 版本");
-        et_apk_introduce.setText(packageInfo.getApk_introduce());
-        et_version_feature.setText(packageInfo.getVersion_feature());
-        tv_apk_developer.setText(packageInfo.getApk_developer());
-
-        tag = packageInfo.getDownload_url();
-        page_name.setText(packageInfo.getApk_name());
+        pb_apk_loading.setVisibility(View.VISIBLE);
+        btn_apk_download.setVisibility(View.GONE);
+        ll_apk_hide.setVisibility(View.GONE);
     }
 
     public String stringFormat(String string) {
@@ -135,9 +138,62 @@ public class AppInfoActivity extends AppCompatActivity implements View.OnClickLi
         return String.format("%.1f 分", grade);
     }
 
+    private void initializeByOkGo() {
+        OkGo.<String>get(NetworkUtils.SEARCH_DETAIL)   // 请求方式和请求url
+                .tag(this)                              // 请求的 tag, 主要用于取消对应的请求
+                .params("apk", apkGeneral.getPackage_name())
+                .cacheMode(CacheMode.NO_CACHE)          // 缓存模式，详细请看缓存介绍
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        String result = response.body();
+
+                        if (result.length() < 20) {
+                            Toast.makeText(mContext, "数据错误", Toast.LENGTH_LONG).show();
+                        } else {    // 把json串转换为PackageResp类型的数据对象packageResp
+                            ApkDetail apkDetail1 = new Gson().fromJson(result, ApkDetail.class);
+                            if (apkDetail1 == null) {
+                                Toast.makeText(mContext, "数据错误", Toast.LENGTH_LONG).show();
+                            } else {
+                                apkDetail = apkDetail1;
+                                setInfo();
+                                init();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        super.onError(response);
+                        Toast.makeText(mContext, "数据错误", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    public void setInfo() {
+        tv_evaluate_number.setText(apkDetail.getEvaluate_number());
+
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(mContext, apkDetail.getApk_screenshots());
+        rv_apk_screenshots.setAdapter(adapter);
+        rv_apk_screenshots.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
+
+        tv_update_date.setText(apkDetail.getUpdate_date() + " 更新");
+        tv_apk_version.setText(apkGeneral.getApk_version() + " 版本");
+        et_apk_introduce.setText(apkDetail.getApk_introduce());
+        et_version_feature.setText(apkDetail.getVersion_feature());
+        tv_apk_developer.setText(apkDetail.getApk_developer());
+
+        tag = apkGeneral.getDownload_url();
+        page_name.setText(apkGeneral.getApk_name());
+
+        pb_apk_loading.setVisibility(View.GONE);
+        btn_apk_download.setVisibility(View.VISIBLE);
+        ll_apk_hide.setVisibility(View.VISIBLE);
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    public void onGetStickyEvent(PackageInfo packageInfo) {
-        this.packageInfo = packageInfo;
+    public void onGetStickyEvent(ApkGeneral apkGeneral) {
+        this.apkGeneral = apkGeneral;
     }
 
     @Override
@@ -159,7 +215,7 @@ public class AppInfoActivity extends AppCompatActivity implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tv_apk_permission:
-                EventBus.getDefault().postSticky(packageInfo.getApk_permission());
+                EventBus.getDefault().postSticky(apkDetail.getApk_permission());
                 Intent intent = new Intent(this, AppPermissionActivity.class);
                 startActivity(intent);
                 break;
@@ -219,8 +275,8 @@ public class AppInfoActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     void init() {
-        int judge = packageInfo.versionController();
-        if (!TextUtils.isEmpty(packageInfo.getOld_version())) {
+        int judge = apkGeneral.versionController();
+        if (!TextUtils.isEmpty(apkGeneral.getOld_version())) {
             if (judge == 0) {
                 btn_apk_download.setText("最新");
                 btn_apk_download.setEnabled(false);
@@ -233,7 +289,7 @@ public class AppInfoActivity extends AppCompatActivity implements View.OnClickLi
                     @Override
                     public void onClick(View v) {
                         // 卸载指定包名的应用
-                        ApkUtils.uninstall(mContext, packageInfo.getPackage_name());
+                        ApkUtils.uninstall(mContext, apkGeneral.getPackage_name());
                         btn_apk_download.setText("下载");
                         btn_apk_download.setOnClickListener(new View.OnClickListener() {
                             @Override

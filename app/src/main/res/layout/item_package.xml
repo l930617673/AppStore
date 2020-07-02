@@ -30,9 +30,10 @@
 
             <TextView
                 android:id="@+id/tv_store_apk_name"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dp_5"
+                android:ellipsize="end"
                 android:text="安卓程序"
                 android:textColor="@color/black"
                 android:textSize="@dimen/sp_15" />
@@ -57,18 +58,29 @@
                         android:layout_weight="1"
                         android:orientation="horizontal">
 
-                        <TextView
-                            android:id="@+id/tv_store_update_date"
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginEnd="@dimen/dp_20"
-                            android:text="2017-10-12" />
+                            android:layout_weight="1"
+                            android:orientation="horizontal">
+
+                            <RatingBar
+                                android:id="@+id/rb_store_apk_grade"
+                                style="?android:attr/ratingBarStyleSmall"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:isIndicator="true"
+                                android:numStars="5"
+                                android:rating="1.5" />
+                        </LinearLayout>
 
                         <TextView
                             android:id="@+id/tv_store_apk_size"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:text="62MB" />
+                            android:layout_weight="1"
+                            android:ellipsize="end"
+                            android:text="1946.2MB" />
 
                     </LinearLayout>
 
@@ -80,15 +92,18 @@
 
                         <TextView
                             android:id="@+id/tv_store_old_version"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginEnd="@dimen/dp_20"
+                            android:layout_weight="1"
+                            android:ellipsize="end"
                             android:text="1.1.4.2.28" />
 
                         <TextView
                             android:id="@+id/tv_store_new_version"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:ellipsize="end"
                             android:text="1.1.4.2.29" />
                     </LinearLayout>
                 </LinearLayout>
@@ -124,20 +139,17 @@
 
                             <TextView
                                 android:id="@+id/tv_store_download_size"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginEnd="@dimen/dp_20"
-                                android:text="1963 M/5156.1 M" />
-
-                            <Space
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1" />
+                                android:layout_weight="1"
+                                android:ellipsize="end"
+                                android:text="1963 M/5156.1 M" />
 
                             <TextView
                                 android:id="@+id/tv_store_download_speed"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:ellipsize="end"
                                 android:text="3.5 M/s" />
                         </LinearLayout>
                     </LinearLayout>
@@ -156,15 +168,14 @@
 
         <Button
             android:id="@+id/btn_store_operation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/dp_10"
+            android:layout_width="@dimen/dp_50"
+            android:layout_height="@dimen/dp_33"
+            android:layout_marginEnd="@dimen/dp_8"
             android:focusable="false"
             android:gravity="center"
             android:text="安装"
             android:textColor="@color/black"
-            android:textSize="@dimen/sp_15" />
+            android:textSize="@dimen/sp_12" />
 
     </LinearLayout>
-
 </LinearLayout>

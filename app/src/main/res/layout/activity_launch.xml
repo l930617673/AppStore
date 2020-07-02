@@ -9,7 +9,6 @@
         android:scaleType="fitXY"
         android:src="@drawable/launch_background" />
 
-
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -30,6 +29,6 @@
             android:layout_marginTop="@dimen/dp_10"
             android:text="放  心  下  载"
             android:textColor="@color/darkturquoise"
-            android:textSize="@dimen/sp_10" />
+            android:textSize="@dimen/sp_15" />
     </LinearLayout>
 </FrameLayout>

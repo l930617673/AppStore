@@ -18,6 +18,7 @@ import com.github.jdsjlzx.interfaces.OnLoadMoreListener;
 import com.github.jdsjlzx.recyclerview.LRecyclerView;
 import com.github.jdsjlzx.recyclerview.LRecyclerViewAdapter;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cache.CacheMode;
 import com.lzy.okgo.callback.StringCallback;
@@ -31,15 +32,15 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import top.lhjjjlxays.appstore.AppInfoActivity;
 import top.lhjjjlxays.appstore.R;
 import top.lhjjjlxays.appstore.adapter.ApplicationMessageAdapter;
 import top.lhjjjlxays.appstore.base.BaseFragment;
+import top.lhjjjlxays.appstore.bean.ApkGeneral;
 import top.lhjjjlxays.appstore.bean.MessageEvent;
-import top.lhjjjlxays.appstore.bean.PackageInfo;
-import top.lhjjjlxays.appstore.bean.PackageResp;
 import top.lhjjjlxays.appstore.util.NetworkUtils;
 
 public class HomeFragment extends BaseFragment implements
@@ -51,8 +52,8 @@ public class HomeFragment extends BaseFragment implements
     private LRecyclerView lrv_package;
     private ProgressBar pb_store_home_loading;
     private ApplicationMessageAdapter mAdapter;
-    private ArrayList<PackageInfo> mPackageList = new ArrayList<>(); // 已安装应用的包信息队列
-    private Map<String, PackageInfo> mPackageMap = new HashMap<>();
+    private ArrayList<ApkGeneral> mApkGeneralList = new ArrayList<>(); // 已安装应用的包信息队列
+    private Map<String, ApkGeneral> mApkGeneralMap = new HashMap<>();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -72,15 +73,15 @@ public class HomeFragment extends BaseFragment implements
     }
 
     public MessageEvent getMessageEvent() {
-        ArrayList<PackageInfo> package1 = new ArrayList<>();
-        ArrayList<PackageInfo> package2 = new ArrayList<>();
+        ArrayList<ApkGeneral> package1 = new ArrayList<>();
+        ArrayList<ApkGeneral> package2 = new ArrayList<>();
 
         Map<String, DownloadTask> map = OkDownload.getInstance().getTaskMap();
 
         for (String key : map.keySet()) {
             Progress progress = DownloadManager.getInstance().get(key);
             if (progress != null) {
-                PackageInfo info = mPackageMap.get(key);
+                ApkGeneral info = mApkGeneralMap.get(key);
                 if (info != null) {
                     if (progress.status == Progress.FINISH) {
                         package2.add(info);
@@ -111,7 +112,7 @@ public class HomeFragment extends BaseFragment implements
     }
 
     private void setLRecyclerView() {
-        mAdapter = new ApplicationMessageAdapter(mContext, mPackageList);
+        mAdapter = new ApplicationMessageAdapter(mContext, mApkGeneralList);
         mAdapter.setOnItemClickListener(this);
 
         LRecyclerViewAdapter adapter = new LRecyclerViewAdapter(mAdapter);
@@ -158,15 +159,17 @@ public class HomeFragment extends BaseFragment implements
                                 }
                             });
                         } else {    // 把json串转换为PackageResp类型的数据对象packageResp
-                            PackageResp packageResp = new Gson().fromJson(result, PackageResp.class);
-                            if (packageResp.package_list == null) {
+                            List<ApkGeneral> apkGenerals = new Gson().fromJson(result, new TypeToken<ArrayList<ApkGeneral>>() {
+                            }.getType());
+
+                            if (apkGenerals == null) {
                                 Toast.makeText(mContext, "数据错误", Toast.LENGTH_LONG).show();
                             } else {
-                                mPackageList.addAll(packageResp.package_list);
-                                lrv_package.refreshComplete(packageResp.package_list.size());
+                                mApkGeneralList.addAll(apkGenerals);
+                                lrv_package.refreshComplete(apkGenerals.size());
 
-                                for (PackageInfo info : packageResp.package_list) {
-                                    mPackageMap.put(info.getDownload_url(), info);
+                                for (ApkGeneral general : apkGenerals) {
+                                    mApkGeneralMap.put(general.getDownload_url(), general);
                                 }
                             }
 
@@ -190,8 +193,8 @@ public class HomeFragment extends BaseFragment implements
 
     @Override
     public void onItemClick(View view, int position) {
-        if (position < mPackageList.size() && position >= 0) {
-            EventBus.getDefault().postSticky(mPackageList.get(position));
+        if (position < mApkGeneralList.size() && position >= 0) {
+            EventBus.getDefault().postSticky(mApkGeneralList.get(position));
             Intent intent = new Intent(getActivity(), AppInfoActivity.class);
             startActivity(intent);
         }

@@ -28,8 +28,8 @@ import java.util.Map;
 
 import top.lhjjjlxays.appstore.adapter.ApplicationMessageAdapter;
 import top.lhjjjlxays.appstore.adapter.ApplicationMessageAdapter.*;
+import top.lhjjjlxays.appstore.bean.ApkGeneral;
 import top.lhjjjlxays.appstore.bean.MessageEvent;
-import top.lhjjjlxays.appstore.bean.PackageInfo;
 
 public class AppDownloadActivity extends AppCompatActivity implements View.OnClickListener,
         OnItemClickListener, OnCancelClickListener {
@@ -37,7 +37,7 @@ public class AppDownloadActivity extends AppCompatActivity implements View.OnCli
 
     private Context mContext;
     private boolean isPause = false;
-    private ArrayList<PackageInfo> download;
+    private ArrayList<ApkGeneral> download;
     private Map<String, DownloadTask> taskMap;
     private ApplicationMessageAdapter mAdapter;
 

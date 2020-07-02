@@ -15,6 +15,7 @@ public class NetworkUtils {
     public static String SHOW_URL = BASE_URL + "/show";
     public static String UPLOAD_URL = BASE_URL + "/upload";
     public static String SEARCH_URL = BASE_URL + "/search";
+    public static String SEARCH_DETAIL = BASE_URL + "/detail";
     public static String DOWNLOAD_URL = BASE_URL + "/download";
     public static String INITIALIZE_URL = BASE_URL + "/initialize";
     public static String VERIFY_CODE_URL = BASE_URL + "/verifyCode";

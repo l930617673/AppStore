@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,8 +35,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import top.lhjjjlxays.appstore.R;
+import top.lhjjjlxays.appstore.bean.ApkGeneral;
 import top.lhjjjlxays.appstore.bean.ApkInfo;
-import top.lhjjjlxays.appstore.bean.PackageInfo;
 import top.lhjjjlxays.appstore.util.ApkUtils;
 import top.lhjjjlxays.appstore.util.DataUtil;
 
@@ -47,15 +48,15 @@ public class ApplicationMessageAdapter extends RecyclerView.Adapter<ApplicationM
     private String activityTag;
 
     private Context mContext; // 声明一个上下文对象
-    private ArrayList<PackageInfo> mPackageInfoList; // 应用信息队列
+    private ArrayList<ApkGeneral> mApkGeneralList; // 应用信息队列
     private ArrayList<ApkInfo> mDownloadedApkList; // 已下载的APK文件队列
     private HashMap<Integer, ViewHolder> mViewMap = new HashMap<>(); // 视图持有者的映射
 
-    public ApplicationMessageAdapter(Context context, ArrayList<PackageInfo> packageinfoList) {
-        mContext = context;
-        mPackageInfoList = packageinfoList;
+    public ApplicationMessageAdapter(Context context, ArrayList<ApkGeneral> mApkGeneralList) {
+        this.mContext = context;
+        this.mApkGeneralList = mApkGeneralList;
         // 获取设备中所有已下载的APK文件
-        mDownloadedApkList = ApkUtils.getAllApkFile(mContext);
+        this.mDownloadedApkList = ApkUtils.getAllApkFile(mContext);
     }
 
     @NonNull
@@ -82,9 +83,24 @@ public class ApplicationMessageAdapter extends RecyclerView.Adapter<ApplicationM
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
-        final PackageInfo item = mPackageInfoList.get(position);
+        final ApkGeneral item = mApkGeneralList.get(position);
+        Progress progress = DownloadManager.getInstance().get(item.getDownload_url());
+        if (progress == null) {
+            holder.ll_store_info.setVisibility(View.VISIBLE);
+            holder.ll_store_download.setVisibility(View.GONE);
+        } else {
+            holder.ll_store_info.setVisibility(View.GONE);
+            holder.ll_store_download.setVisibility(View.VISIBLE);
+        }
+
         holder.tv_store_apk_name.setText(item.getApk_name());
-        holder.tv_store_update_date.setText(item.getUpdate_date());
+        String temp = item.getApk_grade();
+        float tt = 0;
+        if (temp != null && temp.length() > 0) {
+            temp = temp.replaceAll(" ", "").trim();
+            tt = Float.parseFloat(temp) / 2;
+        }
+        holder.rb_store_apk_grade.setRating(tt);
         holder.tv_store_apk_size.setText(item.getApk_size());
         holder.tag = item.getDownload_url();
         holder.pb_store_download.setMax(1000);
@@ -180,7 +196,7 @@ public class ApplicationMessageAdapter extends RecyclerView.Adapter<ApplicationM
 
     @Override
     public int getItemCount() {
-        return mPackageInfoList.size();
+        return mApkGeneralList.size();
     }
 
     // 下载完成，准备进行安装
@@ -221,7 +237,7 @@ public class ApplicationMessageAdapter extends RecyclerView.Adapter<ApplicationM
         LinearLayout ll_store_info;
         ImageView iv_store_img;
         TextView tv_store_apk_name;
-        TextView tv_store_update_date;
+        RatingBar rb_store_apk_grade;
         TextView tv_store_apk_size;
         TextView tv_store_old_version;
         TextView tv_store_new_version;
@@ -247,7 +263,7 @@ public class ApplicationMessageAdapter extends RecyclerView.Adapter<ApplicationM
             this.tv_store_apk_name = itemView.findViewById(R.id.tv_store_apk_name);
             this.tv_store_old_version = itemView.findViewById(R.id.tv_store_old_version);
             this.tv_store_new_version = itemView.findViewById(R.id.tv_store_new_version);
-            this.tv_store_update_date = itemView.findViewById(R.id.tv_store_update_date);
+            this.rb_store_apk_grade = itemView.findViewById(R.id.rb_store_apk_grade);
 
             this.ll_store_download = itemView.findViewById(R.id.ll_store_download);
             this.pb_store_download = itemView.findViewById(R.id.pb_store_download);

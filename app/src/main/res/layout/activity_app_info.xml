@@ -6,19 +6,17 @@
 
     <include layout="@layout/other_page_toolbar" />
 
-    <ScrollView
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginStart="@dimen/dp_2"
-        android:layout_marginEnd="@dimen/dp_2"
-        android:layout_weight="1"
-        android:scrollbars="none">
+        android:layout_weight="1">
 
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/dp_2"
+            android:layout_marginEnd="@dimen/dp_2"
+            android:scrollbars="none">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -26,254 +24,286 @@
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
 
-                <Space
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp_100" />
-
-                <ImageView
-                    android:id="@+id/iv_apk_icon"
-                    android:layout_width="@dimen/dp_66"
-                    android:layout_height="@dimen/dp_66"
-                    android:src="@drawable/icon_test" />
-
-                <TextView
-                    android:id="@+id/tv_apk_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp_7"
-                    android:text="爱奇艺"
-                    android:textSize="@dimen/sp_18"
-                    android:textStyle="bold" />
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_margin="@dimen/dp_5"
                     android:gravity="center_horizontal"
-                    android:orientation="horizontal">
+                    android:orientation="vertical">
+
+                    <Space
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_100" />
+
+                    <ImageView
+                        android:id="@+id/iv_apk_icon"
+                        android:layout_width="@dimen/dp_66"
+                        android:layout_height="@dimen/dp_66"
+                        android:src="@drawable/icon_test" />
 
                     <TextView
-                        android:id="@+id/tv_apk_grade"
+                        android:id="@+id/tv_apk_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/dp_5"
-                        android:text="4.5 分"
-                        android:textSize="@dimen/sp_12" />
+                        android:layout_marginTop="@dimen/dp_7"
+                        android:text="爱奇艺"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/sp_18"
+                        android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/tv_apk_size"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="@dimen/dp_5"
+                        android:gravity="center_horizontal"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/tv_apk_grade"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/dp_5"
+                            android:text="4.5 分"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/sp_12" />
+
+                        <TextView
+                            android:id="@+id/tv_apk_size"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/dp_5"
+                            android:layout_marginEnd="@dimen/dp_5"
+                            android:text="28.54 M"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/sp_12" />
+
+                        <TextView
+                            android:id="@+id/tv_evaluate_number"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/dp_5"
+                            android:text="0次评分"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/sp_12" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_apk_hide"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:visibility="visible">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_20"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="详情"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/sp_18"
+                            android:textStyle="bold" />
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rv_apk_screenshots"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                        </androidx.recyclerview.widget.RecyclerView>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/dp_5"
+                        android:layout_marginTop="@dimen/dp_5"
                         android:layout_marginEnd="@dimen/dp_5"
-                        android:text="28.54 M"
-                        android:textSize="@dimen/sp_12" />
+                        android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/tv_evaluate_number"
-                        android:layout_width="wrap_content"
+                        <TextView
+                            android:id="@+id/tv_update_date"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/dp_5"
+                            android:text="2017-10-15 更新"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/sp_10" />
+
+                        <TextView
+                            android:id="@+id/tv_apk_version"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/dp_5"
+                            android:layout_marginEnd="@dimen/dp_5"
+                            android:text="1.1.12.1535 版本"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/sp_10" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/dp_5"
-                        android:text="10131次评分"
-                        android:textSize="@dimen/sp_12" />
+                        android:layout_marginTop="@dimen/dp_8"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/dp_5"
+                            android:layout_marginBottom="@dimen/dp_5"
+                            android:text="【应用简介】"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/sp_16" />
+
+                        <com.ms.square.android.expandabletextview.ExpandableTextView xmlns:expandableTextView="http://schemas.android.com/apk/res-auto"
+                            android:id="@+id/et_apk_introduce"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            expandableTextView:animDuration="200"
+                            expandableTextView:maxCollapsedLines="2">
+
+                            <TextView
+                                android:id="@id/expandable_text"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="@dimen/dp_5"
+                                android:lineSpacingExtra="@dimen/dp_3"
+                                android:text="简介"
+                                android:textSize="@dimen/sp_13" />
+
+                            <ImageButton
+                                android:id="@id/expand_collapse"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="end|bottom"
+                                android:background="@android:color/transparent"
+                                android:padding="16dp" />
+                        </com.ms.square.android.expandabletextview.ExpandableTextView>
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_8"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/dp_5"
+                            android:layout_marginBottom="@dimen/dp_5"
+                            android:text="【版本特性】"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/sp_16" />
+
+                        <com.ms.square.android.expandabletextview.ExpandableTextView xmlns:expandableTextView="http://schemas.android.com/apk/res-auto"
+                            android:id="@+id/et_version_feature"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            expandableTextView:animDuration="200"
+                            expandableTextView:maxCollapsedLines="2">
+
+                            <TextView
+                                android:id="@id/expandable_text"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="@dimen/dp_5"
+                                android:lineSpacingExtra="@dimen/dp_3"
+                                android:text="简介"
+                                android:textSize="@dimen/sp_13" />
+
+                            <ImageButton
+                                android:id="@id/expand_collapse"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="end|bottom"
+                                android:background="@android:color/transparent"
+                                android:padding="16dp" />
+                        </com.ms.square.android.expandabletextview.ExpandableTextView>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_8"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/dp_5"
+                            android:lineSpacingExtra="@dimen/dp_3"
+                            android:text="开发商"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/sp_10"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tv_apk_developer"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/dp_5"
+                            android:lineSpacingExtra="@dimen/dp_3"
+                            android:text="北京智美智学科技有限公司"
+                            android:textSize="@dimen/sp_10" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_8"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/dp_5"
+                            android:lineSpacingExtra="@dimen/dp_3"
+                            android:text="应用权限"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/sp_10"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tv_apk_permission"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/dp_5"
+                            android:lineSpacingExtra="@dimen/dp_3"
+                            android:text="查看权限 >"
+                            android:textColor="#5490B6"
+                            android:textSize="@dimen/sp_10" />
+
+                        <Space
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/dp_120" />
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
+        </ScrollView>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_20"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="详情"
-                    android:textSize="@dimen/sp_18"
-                    android:textStyle="bold" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_apk_screenshots"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                </androidx.recyclerview.widget.RecyclerView>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dp_5"
-                android:layout_marginTop="@dimen/dp_5"
-                android:layout_marginEnd="@dimen/dp_5"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/tv_update_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/dp_5"
-                    android:text="2017-10-15 更新"
-                    android:textSize="@dimen/sp_10" />
-
-                <TextView
-                    android:id="@+id/tv_apk_version"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/dp_5"
-                    android:layout_marginEnd="@dimen/dp_5"
-                    android:text="1.1.12.1535 版本"
-                    android:textSize="@dimen/sp_10" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_8"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/dp_5"
-                    android:layout_marginBottom="@dimen/dp_5"
-                    android:text="【应用简介】"
-                    android:textSize="@dimen/sp_16" />
-
-                <com.ms.square.android.expandabletextview.ExpandableTextView xmlns:expandableTextView="http://schemas.android.com/apk/res-auto"
-                    android:id="@+id/et_apk_introduce"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    expandableTextView:animDuration="200"
-                    expandableTextView:maxCollapsedLines="2">
-
-                    <TextView
-                        android:id="@id/expandable_text"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/dp_5"
-                        android:lineSpacingExtra="@dimen/dp_3"
-                        android:text="简介"
-                        android:textSize="@dimen/sp_13" />
-
-                    <ImageButton
-                        android:id="@id/expand_collapse"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="end|bottom"
-                        android:background="@android:color/transparent"
-                        android:padding="16dp" />
-                </com.ms.square.android.expandabletextview.ExpandableTextView>
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_8"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/dp_5"
-                    android:layout_marginBottom="@dimen/dp_5"
-                    android:text="【版本特性】"
-                    android:textSize="@dimen/sp_16" />
-
-                <com.ms.square.android.expandabletextview.ExpandableTextView xmlns:expandableTextView="http://schemas.android.com/apk/res-auto"
-                    android:id="@+id/et_version_feature"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    expandableTextView:animDuration="200"
-                    expandableTextView:maxCollapsedLines="2">
-
-                    <TextView
-                        android:id="@id/expandable_text"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/dp_5"
-                        android:lineSpacingExtra="@dimen/dp_3"
-                        android:text="简介"
-                        android:textSize="@dimen/sp_13" />
-
-                    <ImageButton
-                        android:id="@id/expand_collapse"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="end|bottom"
-                        android:background="@android:color/transparent"
-                        android:padding="16dp" />
-                </com.ms.square.android.expandabletextview.ExpandableTextView>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_8"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/dp_5"
-                    android:lineSpacingExtra="@dimen/dp_3"
-                    android:text="开发商"
-                    android:textSize="@dimen/sp_10"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tv_apk_developer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/dp_5"
-                    android:lineSpacingExtra="@dimen/dp_3"
-                    android:text="北京智美智学科技有限公司"
-                    android:textSize="@dimen/sp_10" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_8"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/dp_5"
-                    android:lineSpacingExtra="@dimen/dp_3"
-                    android:text="应用权限"
-                    android:textSize="@dimen/sp_10"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tv_apk_permission"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/dp_5"
-                    android:lineSpacingExtra="@dimen/dp_3"
-                    android:text="查看权限 >"
-                    android:textColor="#5490B6"
-                    android:textSize="@dimen/sp_10" />
-            </LinearLayout>
-        </LinearLayout>
-    </ScrollView>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/transparent"
-        android:gravity="center">
+        <ProgressBar
+            android:id="@+id/pb_apk_loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/btn_apk_download"
             android:layout_width="@dimen/dp_200"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_5"
-            android:layout_marginEnd="@dimen/dp_15"
-            android:text="下载" />
-    </LinearLayout>
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginBottom="@dimen/dp_10"
+            android:text="下载"
+            android:textColor="@color/black"
+            android:visibility="visible" />
+    </FrameLayout>
 </LinearLayout>

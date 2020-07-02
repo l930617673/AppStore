@@ -14,15 +14,15 @@ import java.util.Map;
  */
 public class MessageEvent {
     private String key;
-    private ArrayList<PackageInfo> download;
+    private ArrayList<ApkGeneral> download;
     private Map<String, DownloadTask> taskMap;
 
     public MessageEvent() {
     }
 
-    public MessageEvent(String key, ArrayList<PackageInfo> download, Map<String, DownloadTask> taskMap) {
+    public MessageEvent(String key, ArrayList<ApkGeneral> download, Map<String, DownloadTask> taskMap) {
         this.key = (key != null) ? key : "";
-        this.download = (download != null) ? download : new ArrayList<PackageInfo>();
+        this.download = (download != null) ? download : new ArrayList<ApkGeneral>();
         this.taskMap = (taskMap != null) ? taskMap : new HashMap<String, DownloadTask>();
     }
 
@@ -34,11 +34,11 @@ public class MessageEvent {
         this.key = key;
     }
 
-    public ArrayList<PackageInfo> getDownload() {
+    public ArrayList<ApkGeneral> getDownload() {
         return download;
     }
 
-    public void setDownload(ArrayList<PackageInfo> download) {
+    public void setDownload(ArrayList<ApkGeneral> download) {
         this.download = download;
     }
 
