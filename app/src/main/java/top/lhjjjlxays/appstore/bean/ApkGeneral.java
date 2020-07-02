@@ -13,17 +13,6 @@ public class ApkGeneral {
     public ApkGeneral() {
     }
 
-    public ApkGeneral(String apk_name, String apk_icon, String apk_grade, String apk_size, String apk_version, String download_url, String package_name, String old_version) {
-        this.apk_name = apk_name;
-        this.apk_icon = apk_icon;
-        this.apk_grade = apk_grade;
-        this.apk_size = apk_size;
-        this.apk_version = apk_version;
-        this.download_url = download_url;
-        this.package_name = package_name;
-        this.old_version = old_version;
-    }
-
     public String getOld_version() {
         return old_version;
     }

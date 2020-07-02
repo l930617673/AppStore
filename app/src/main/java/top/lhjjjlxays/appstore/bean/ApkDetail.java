@@ -15,17 +15,6 @@ public class ApkDetail {
     public ApkDetail() {
     }
 
-    public ApkDetail(String apk_developer, String evaluate_number, String update_date, String package_name, String apk_permission, List<String> apk_screenshots, String apk_introduce, String version_feature) {
-        this.apk_developer = apk_developer;
-        this.evaluate_number = evaluate_number;
-        this.update_date = update_date;
-        this.package_name = package_name;
-        this.apk_permission = apk_permission;
-        this.apk_screenshots = apk_screenshots;
-        this.apk_introduce = apk_introduce;
-        this.version_feature = version_feature;
-    }
-
     public String getApk_developer() {
         return apk_developer;
     }
