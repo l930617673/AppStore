@@ -85,7 +85,9 @@ public class ApplicationMessageAdapter extends RecyclerView.Adapter<ApplicationM
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         final ApkGeneral item = mApkGeneralList.get(position);
         Progress progress = DownloadManager.getInstance().get(item.getDownload_url());
-        if (progress == null) {
+        holder.btn_store_operation.setTextColor(Color.WHITE);
+
+        if (progress == null || progress.status == Progress.FINISH) {
             holder.ll_store_info.setVisibility(View.VISIBLE);
             holder.ll_store_download.setVisibility(View.GONE);
         } else {
@@ -201,6 +203,7 @@ public class ApplicationMessageAdapter extends RecyclerView.Adapter<ApplicationM
 
     // 下载完成，准备进行安装
     private void setDownloaded(ViewHolder holder, final File file) {
+        holder.btn_store_operation.setEnabled(true);
         holder.btn_store_operation.setText("安装");
         holder.tv_store_download_speed.setText("下载完成");
         holder.btn_store_operation.setTextColor(Color.GREEN);
@@ -287,7 +290,7 @@ public class ApplicationMessageAdapter extends RecyclerView.Adapter<ApplicationM
 
                     cancel(true);
                     btn_store_operation.setText("下载");
-                    btn_store_operation.setTextColor(Color.BLACK);
+                    btn_store_operation.setTextColor(Color.WHITE);
 
                     btn_store_operation.setOnClickListener(new OnClickListener() {
                         @Override

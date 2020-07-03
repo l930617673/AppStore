@@ -95,8 +95,7 @@ public class AppDownloadActivity extends AppCompatActivity implements View.OnCli
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             finish();
         }
-
-        return false;
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override

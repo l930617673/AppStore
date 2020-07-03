@@ -4,7 +4,7 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">#309BE6</item>
-        <item name="colorPrimaryDark">#409AE6</item>
+        <item name="colorPrimaryDark">#309BE6</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
@@ -23,14 +23,13 @@
         <item name="android:textStyle">normal</item>
     </style>
 
-    <style name="mainButton">
+    <style name="radioButton">
         <item name="android:gravity">center</item>
         <item name="android:drawablePadding">@dimen/dp_5</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_weight">1</item>
+        <item name="android:layout_width">@dimen/dp_42</item>
+        <item name="android:layout_height">@dimen/dp_42</item>
         <item name="android:button">@null</item>
-        <item name="android:textSize">@dimen/sp_12</item>
+        <item name="android:textSize">@dimen/sp_10</item>
         <item name="android:background">@color/white</item>
         <item name="android:textColor">@drawable/main_button_text_color_selector</item>
     </style>

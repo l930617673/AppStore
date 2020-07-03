@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/dp_50"
+    android:layout_height="@dimen/dp_45"
     android:background="#309BE6"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:paddingStart="@dimen/dp_15"
+    android:paddingStart="@dimen/dp_10"
     android:paddingEnd="@dimen/dp_10">
     <!--#5490B6-->
 
     <ImageView
         android:id="@+id/iv_back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/dp_40"
+        android:layout_height="@dimen/dp_25"
+        android:padding="@dimen/dp_10"
+        android:scaleType="centerCrop"
         android:src="@drawable/except_main_toolbar_back" />
 
     <TextView
@@ -24,4 +26,9 @@
         android:text="Home"
         android:textColor="@color/white"
         android:textSize="@dimen/sp_15" />
+
+    <Space
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1" />
 </LinearLayout>

@@ -44,7 +44,7 @@ public class AppPermissionActivity extends AppCompatActivity implements View.OnC
             finish();
         }
 
-        return false;
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override

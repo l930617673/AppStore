@@ -4,20 +4,23 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -41,7 +44,7 @@ public class AppStoreActivity extends FragmentActivity implements
     private String TAG = AppStoreActivity.class.getSimpleName();
 
     private Context context;
-
+    private boolean isExit = false;
     private BaseFragment oldFragment;
     private PopupWindow popupWindow;
     private List<BaseFragment> baseFragments;
@@ -56,14 +59,31 @@ public class AppStoreActivity extends FragmentActivity implements
         OkDownload.getInstance().setFolder(Environment.getExternalStorageDirectory().getAbsolutePath());
         OkDownload.restore(DownloadManager.getInstance().getAll()); //这里是将数据库的数据恢复
 
-        findViewById(R.id.iv_menu).setOnClickListener(this);
+        findViewById(R.id.ib_menu).setOnClickListener(this);
         ((TextView) findViewById(R.id.page_name)).setText("应用超市");
         ((RadioGroup) findViewById(R.id.rg_store_group)).setOnCheckedChangeListener(this);
+
+        //初始化按钮
+        initRadioButton();
 
         //解决Fragment重叠问题
         if (savedInstanceState == null) {
             initFragment();
         }
+    }
+
+    private void initRadioButton() {
+        Drawable home = ResourcesCompat.getDrawable(getResources(), R.drawable.fragment_store_home_selector, null);
+        Drawable search = ResourcesCompat.getDrawable(getResources(), R.drawable.fragment_store_selector, null);
+
+        assert home != null;
+        home.setBounds(0, 0, 64, 64);
+
+        assert search != null;
+        search.setBounds(0, 0, 64, 64);
+
+        ((RadioButton) findViewById(R.id.rb_store_home)).setCompoundDrawables(null, home, null, null);
+        ((RadioButton) findViewById(R.id.rb_store_search)).setCompoundDrawables(null, search, null, null);
     }
 
     @Override
@@ -180,8 +200,29 @@ public class AppStoreActivity extends FragmentActivity implements
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.iv_menu) {
+        if (v.getId() == R.id.ib_menu) {
             showPopupWindow(v);
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (isExit) {
+                this.finish();
+            } else {
+                Toast.makeText(this, "再按一次退出", Toast.LENGTH_SHORT).show();
+                isExit = true;
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        isExit = false;
+                    }
+                }, 2000);
+            }
+            return true;
+        }
+
+        return super.onKeyDown(keyCode, event);
     }
 }

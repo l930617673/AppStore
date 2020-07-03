@@ -1,5 +1,6 @@
 package top.lhjjjlxays.appstore;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -42,6 +43,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
+import java.text.DecimalFormat;
 import java.util.List;
 
 import top.lhjjjlxays.appstore.bean.ApkDetail;
@@ -56,25 +58,8 @@ public class AppInfoActivity extends AppCompatActivity implements View.OnClickLi
     private Context mContext;
     private ApkGeneral apkGeneral;
     private ApkDetail apkDetail;
-    private DownloadTask task;
-    private String tag;
 
-    private TextView page_name;
-    private ImageView iv_apk_icon;
-    private TextView tv_apk_name;
-    private TextView tv_apk_grade;
-    private TextView tv_apk_size;
-    private TextView tv_evaluate_number;
-    private RecyclerView rv_apk_screenshots;
-    private TextView tv_update_date;
-    private TextView tv_apk_version;
-    private ExpandableTextView et_apk_introduce;
-    private ExpandableTextView et_version_feature;
-    private TextView tv_apk_developer;
-    private LinearLayout ll_apk_hide;
-    private ProgressBar pb_apk_loading;
-
-    private Button btn_apk_download;
+    private ViewHolder holder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,29 +70,14 @@ public class AppInfoActivity extends AppCompatActivity implements View.OnClickLi
         OkGo.getInstance().init(getApplication());
         EventBus.getDefault().register(this);
 
-        initFindView();
+        initView();
         initializeByOkGo();
     }
 
-    public void initFindView() {
-        page_name = findViewById(R.id.page_name);
+    public void initView() {
+        holder = new ViewHolder();
 
-        iv_apk_icon = findViewById(R.id.iv_apk_icon);
-        tv_apk_name = findViewById(R.id.tv_apk_name);
-        tv_apk_grade = findViewById(R.id.tv_apk_grade);
-        tv_apk_size = findViewById(R.id.tv_apk_size);
-        tv_evaluate_number = findViewById(R.id.tv_evaluate_number);
-        rv_apk_screenshots = findViewById(R.id.rv_apk_screenshots);
-        tv_update_date = findViewById(R.id.tv_update_date);
-        tv_apk_version = findViewById(R.id.tv_apk_version);
-        et_apk_introduce = findViewById(R.id.et_apk_introduce);
-        et_version_feature = findViewById(R.id.et_version_feature);
-        tv_apk_developer = findViewById(R.id.tv_apk_developer);
-        btn_apk_download = findViewById(R.id.btn_apk_download);
-        ll_apk_hide = findViewById(R.id.ll_apk_hide);
-        pb_apk_loading = findViewById(R.id.pb_apk_loading);
-
-        btn_apk_download.setOnClickListener(new View.OnClickListener() {
+        holder.btn_apk_download.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 start();
@@ -117,22 +87,31 @@ public class AppInfoActivity extends AppCompatActivity implements View.OnClickLi
         findViewById(R.id.tv_apk_permission).setOnClickListener(this);
         findViewById(R.id.iv_back).setOnClickListener(this);
 
+        //设置已知信息
+        setKnownInfo();
+    }
+
+    private void setKnownInfo() {
+        //设置标题
+        holder.page_name.setText(apkGeneral.getApk_name());
+
         //设置已知标签
         Glide.with(mContext)
                 .asBitmap()
                 .apply(RequestOptions.bitmapTransform(new RoundedCorners(25)))
                 .load(apkGeneral.getApk_icon())
-                .into(iv_apk_icon);
+                .into(holder.iv_apk_icon);
 
-        tv_apk_name.setText(apkGeneral.getApk_name());
-        tv_apk_grade.setText(stringFormat(apkGeneral.getApk_grade()));
-        tv_apk_size.setText(apkGeneral.getApk_size());
+        holder.tv_apk_name.setText(apkGeneral.getApk_name());
+        holder.tv_apk_grade.setText(stringFormat(apkGeneral.getApk_grade()));
+        holder.tv_apk_size.setText(apkGeneral.getApk_size());
 
-        pb_apk_loading.setVisibility(View.VISIBLE);
-        btn_apk_download.setVisibility(View.GONE);
-        ll_apk_hide.setVisibility(View.GONE);
+        holder.pb_apk_loading.setVisibility(View.VISIBLE);
+        holder.btn_apk_download.setVisibility(View.GONE);
+        holder.ll_apk_hide.setVisibility(View.GONE);
     }
 
+    @SuppressLint("DefaultLocale")
     public String stringFormat(String string) {
         double grade = Integer.parseInt(string) / 2.0;
         return String.format("%.1f 分", grade);
@@ -170,25 +149,24 @@ public class AppInfoActivity extends AppCompatActivity implements View.OnClickLi
                 });
     }
 
+    @SuppressLint("SetTextI18n")
     public void setInfo() {
-        tv_evaluate_number.setText(apkDetail.getEvaluate_number());
+        holder.tv_evaluate_number.setText(apkDetail.getEvaluate_number());
 
         RecyclerViewAdapter adapter = new RecyclerViewAdapter(mContext, apkDetail.getApk_screenshots());
-        rv_apk_screenshots.setAdapter(adapter);
-        rv_apk_screenshots.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
+        holder.rv_apk_screenshots.setAdapter(adapter);
+        holder.rv_apk_screenshots.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
 
-        tv_update_date.setText(apkDetail.getUpdate_date() + " 更新");
-        tv_apk_version.setText(apkGeneral.getApk_version() + " 版本");
-        et_apk_introduce.setText(apkDetail.getApk_introduce());
-        et_version_feature.setText(apkDetail.getVersion_feature());
-        tv_apk_developer.setText(apkDetail.getApk_developer());
+        holder.tv_update_date.setText(apkDetail.getUpdate_date() + " 更新");
+        holder.tv_apk_version.setText(apkGeneral.getApk_version() + " 版本");
+        holder.et_apk_introduce.setText(apkDetail.getApk_introduce());
+        holder.et_version_feature.setText(apkDetail.getVersion_feature());
+        holder.tv_apk_developer.setText(apkDetail.getApk_developer());
 
-        tag = apkGeneral.getDownload_url();
-        page_name.setText(apkGeneral.getApk_name());
-
-        pb_apk_loading.setVisibility(View.GONE);
-        btn_apk_download.setVisibility(View.VISIBLE);
-        ll_apk_hide.setVisibility(View.VISIBLE);
+        holder.tag = apkGeneral.getDownload_url();
+        holder.pb_apk_loading.setVisibility(View.GONE);
+        holder.btn_apk_download.setVisibility(View.VISIBLE);
+        holder.ll_apk_hide.setVisibility(View.VISIBLE);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
@@ -201,8 +179,7 @@ public class AppInfoActivity extends AppCompatActivity implements View.OnClickLi
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             finish();
         }
-
-        return false;
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override
@@ -278,20 +255,20 @@ public class AppInfoActivity extends AppCompatActivity implements View.OnClickLi
         int judge = apkGeneral.versionController();
         if (!TextUtils.isEmpty(apkGeneral.getOld_version())) {
             if (judge == 0) {
-                btn_apk_download.setText("最新");
-                btn_apk_download.setEnabled(false);
+                holder.btn_apk_download.setText("最新");
+                holder.btn_apk_download.setEnabled(false);
             } else if (judge > 0) {
-                btn_apk_download.setText("待更");
-                btn_apk_download.setEnabled(false);
+                holder.btn_apk_download.setText("待更");
+                holder.btn_apk_download.setEnabled(false);
             } else {
-                btn_apk_download.setText("更新");
-                btn_apk_download.setOnClickListener(new View.OnClickListener() {
+                holder.btn_apk_download.setText("更新");
+                holder.btn_apk_download.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         // 卸载指定包名的应用
                         ApkUtils.uninstall(mContext, apkGeneral.getPackage_name());
-                        btn_apk_download.setText("下载");
-                        btn_apk_download.setOnClickListener(new View.OnClickListener() {
+                        holder.btn_apk_download.setText("下载");
+                        holder.btn_apk_download.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 start();
@@ -302,16 +279,16 @@ public class AppInfoActivity extends AppCompatActivity implements View.OnClickLi
             }
         }
 
-        Progress progress = DownloadManager.getInstance().get(tag);
+        Progress progress = DownloadManager.getInstance().get(holder.tag);
         if (progress != null) {
-            DownloadListener downloadListener = new StoreDownloadListener(tag);
-            this.task = OkDownload.restore(progress).register(downloadListener);
+            DownloadListener downloadListener = new StoreDownloadListener(holder.tag);
+            this.holder.task = OkDownload.restore(progress).register(downloadListener);
             switch (progress.status) {
                 case Progress.NONE:
                     break;
                 case Progress.PAUSE:
-                    btn_apk_download.setText("继续");
-                    btn_apk_download.setOnClickListener(new View.OnClickListener() {
+                    holder.btn_apk_download.setText("继续");
+                    holder.btn_apk_download.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             start();
@@ -319,8 +296,8 @@ public class AppInfoActivity extends AppCompatActivity implements View.OnClickLi
                     });
                     break;
                 case Progress.ERROR:
-                    btn_apk_download.setText("重下");
-                    btn_apk_download.setOnClickListener(new View.OnClickListener() {
+                    holder.btn_apk_download.setText("重下");
+                    holder.btn_apk_download.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             restart();
@@ -328,8 +305,8 @@ public class AppInfoActivity extends AppCompatActivity implements View.OnClickLi
                     });
                     break;
                 case Progress.WAITING:
-                    btn_apk_download.setText("暂停");
-                    btn_apk_download.setOnClickListener(new View.OnClickListener() {
+                    holder.btn_apk_download.setText("暂停");
+                    holder.btn_apk_download.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             pause();
@@ -340,7 +317,7 @@ public class AppInfoActivity extends AppCompatActivity implements View.OnClickLi
                     setDownloaded(new File(progress.filePath));
                     break;
                 case Progress.LOADING:
-                    btn_apk_download.setOnClickListener(new View.OnClickListener() {
+                    holder.btn_apk_download.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             pause();
@@ -352,12 +329,13 @@ public class AppInfoActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     void refresh(final Progress progress) {
-        btn_apk_download.setText((int) (progress.fraction * 100) + "%");
+        DecimalFormat df = new DecimalFormat("##.#%");//输出"0.12"
+        holder.btn_apk_download.setText(df.format(progress.fraction));
 
         switch (progress.status) {
             case Progress.NONE:
-                btn_apk_download.setText("下载");
-                btn_apk_download.setOnClickListener(new View.OnClickListener() {
+                holder.btn_apk_download.setText("下载");
+                holder.btn_apk_download.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         start();
@@ -365,8 +343,8 @@ public class AppInfoActivity extends AppCompatActivity implements View.OnClickLi
                 });
                 break;
             case Progress.PAUSE:
-                btn_apk_download.setText("继续");
-                btn_apk_download.setOnClickListener(new View.OnClickListener() {
+                holder.btn_apk_download.setText("继续");
+                holder.btn_apk_download.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         start();
@@ -374,8 +352,8 @@ public class AppInfoActivity extends AppCompatActivity implements View.OnClickLi
                 });
                 break;
             case Progress.ERROR:
-                btn_apk_download.setText("重下");
-                btn_apk_download.setOnClickListener(new View.OnClickListener() {
+                holder.btn_apk_download.setText("重下");
+                holder.btn_apk_download.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         restart();
@@ -383,8 +361,8 @@ public class AppInfoActivity extends AppCompatActivity implements View.OnClickLi
                 });
                 break;
             case Progress.WAITING:
-                btn_apk_download.setText("暂停");
-                btn_apk_download.setOnClickListener(new View.OnClickListener() {
+                holder.btn_apk_download.setText("暂停");
+                holder.btn_apk_download.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         pause();
@@ -395,7 +373,7 @@ public class AppInfoActivity extends AppCompatActivity implements View.OnClickLi
                 setDownloaded(new File(progress.filePath));
                 break;
             case Progress.LOADING:
-                btn_apk_download.setOnClickListener(new View.OnClickListener() {
+                holder.btn_apk_download.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         pause();
@@ -406,24 +384,24 @@ public class AppInfoActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     public void start() {
-        DownloadListener downloadListener = new StoreDownloadListener(tag);
-        Progress progress = DownloadManager.getInstance().get(tag);
+        DownloadListener downloadListener = new StoreDownloadListener(holder.tag);
+        Progress progress = DownloadManager.getInstance().get(holder.tag);
         if (progress == null) {
-            GetRequest<File> request = OkGo.get(tag);
-            this.task = OkDownload.request(tag, request)
+            GetRequest<File> request = OkGo.get(holder.tag);
+            this.holder.task = OkDownload.request(holder.tag, request)
                     .register(downloadListener)
                     .save();
         } else {
-            this.task = OkDownload.restore(progress).register(downloadListener);
+            this.holder.task = OkDownload.restore(progress).register(downloadListener);
         }
 
-        progress = task.progress;
+        progress = holder.task.progress;
 
         switch (progress.status) {
             case Progress.PAUSE:
             case Progress.NONE:
             case Progress.ERROR:
-                task.start();
+                holder.task.start();
                 break;
             case Progress.FINISH:
                 setDownloaded(new File(progress.filePath));
@@ -433,21 +411,21 @@ public class AppInfoActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     void pause() {
-        task.pause();
+        holder.task.pause();
     }
 
     void remove() {
-        task.remove(true);
+        holder.task.remove(true);
     }
 
     void restart() {
-        task.restart();
+        holder.task.restart();
     }
 
     void setDownloaded(final File file) {
-        btn_apk_download.setText("安装");
-        btn_apk_download.setTextColor(Color.GREEN);
-        btn_apk_download.setOnClickListener(new View.OnClickListener() {
+        holder.btn_apk_download.setText("安装");
+        holder.btn_apk_download.setTextColor(Color.GREEN);
+        holder.btn_apk_download.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ApkUtils.install(mContext, file);
@@ -485,14 +463,55 @@ public class AppInfoActivity extends AppCompatActivity implements View.OnClickLi
         @Override
         public void onRemove(Progress progress) {
             remove();
-            btn_apk_download.setText("安装");
-            btn_apk_download.setTextColor(Color.GREEN);
-            btn_apk_download.setOnClickListener(new View.OnClickListener() {
+            holder.btn_apk_download.setText("安装");
+            holder.btn_apk_download.setTextColor(Color.GREEN);
+            holder.btn_apk_download.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     start();
                 }
             });
+        }
+    }
+
+    //信息页面持有者
+    private class ViewHolder {
+        String tag;
+        DownloadTask task;
+
+        TextView page_name;
+        ImageView iv_apk_icon;
+        TextView tv_apk_name;
+        TextView tv_apk_grade;
+        TextView tv_apk_size;
+        TextView tv_evaluate_number;
+        RecyclerView rv_apk_screenshots;
+        TextView tv_update_date;
+        TextView tv_apk_version;
+        ExpandableTextView et_apk_introduce;
+        ExpandableTextView et_version_feature;
+        TextView tv_apk_developer;
+        LinearLayout ll_apk_hide;
+        ProgressBar pb_apk_loading;
+        Button btn_apk_download;
+
+        ViewHolder() {
+            page_name = findViewById(R.id.page_name);
+
+            iv_apk_icon = findViewById(R.id.iv_apk_icon);
+            tv_apk_name = findViewById(R.id.tv_apk_name);
+            tv_apk_grade = findViewById(R.id.tv_apk_grade);
+            tv_apk_size = findViewById(R.id.tv_apk_size);
+            tv_evaluate_number = findViewById(R.id.tv_evaluate_number);
+            rv_apk_screenshots = findViewById(R.id.rv_apk_screenshots);
+            tv_update_date = findViewById(R.id.tv_update_date);
+            tv_apk_version = findViewById(R.id.tv_apk_version);
+            et_apk_introduce = findViewById(R.id.et_apk_introduce);
+            et_version_feature = findViewById(R.id.et_version_feature);
+            tv_apk_developer = findViewById(R.id.tv_apk_developer);
+            btn_apk_download = findViewById(R.id.btn_apk_download);
+            ll_apk_hide = findViewById(R.id.ll_apk_hide);
+            pb_apk_loading = findViewById(R.id.pb_apk_loading);
         }
     }
 }

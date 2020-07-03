@@ -20,18 +20,31 @@
         android:orientation="horizontal"
         android:padding="@dimen/dp_5">
 
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
         <RadioButton
             android:id="@+id/rb_store_home"
-            style="@style/mainButton"
+            style="@style/radioButton"
             android:checked="true"
-            android:drawableTop="@drawable/fragment_store_home_selector"
             android:text="首页" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2" />
 
         <RadioButton
             android:id="@+id/rb_store_search"
-            style="@style/mainButton"
-            android:drawableTop="@drawable/fragment_store_selector"
+            style="@style/radioButton"
             android:text="搜索" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
     </RadioGroup>
 
 </LinearLayout>
