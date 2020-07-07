@@ -165,8 +165,9 @@
                             android:id="@+id/et_apk_introduce"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:ellipsize="end"
                             expandableTextView:animDuration="200"
-                            expandableTextView:maxCollapsedLines="2">
+                            expandableTextView:maxCollapsedLines="3">
 
                             <TextView
                                 android:id="@id/expandable_text"
@@ -208,8 +209,9 @@
                             android:id="@+id/et_version_feature"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:ellipsize="end"
                             expandableTextView:animDuration="200"
-                            expandableTextView:maxCollapsedLines="2">
+                            expandableTextView:maxCollapsedLines="3">
 
                             <TextView
                                 android:id="@id/expandable_text"

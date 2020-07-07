@@ -39,6 +39,7 @@ public class GlideSizeTransformUtil extends ImageViewTarget<Bitmap> {
 
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         DisplayMetrics dm = new DisplayMetrics();
+        assert wm != null;
         wm.getDefaultDisplay().getMetrics(dm);
         int owidth = dm.widthPixels;
 

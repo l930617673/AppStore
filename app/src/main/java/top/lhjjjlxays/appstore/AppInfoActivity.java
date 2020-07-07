@@ -4,12 +4,14 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -23,7 +25,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
 import com.lzy.okgo.OkGo;
@@ -153,9 +158,27 @@ public class AppInfoActivity extends AppCompatActivity implements View.OnClickLi
     public void setInfo() {
         holder.tv_evaluate_number.setText(apkDetail.getEvaluate_number());
 
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(mContext, apkDetail.getApk_screenshots());
+        final RecyclerViewAdapter adapter = new RecyclerViewAdapter(mContext, apkDetail.getApk_screenshots());
         holder.rv_apk_screenshots.setAdapter(adapter);
         holder.rv_apk_screenshots.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
+        holder.rv_apk_screenshots.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                // State的三种状态：SCROLL_STATE_IDLE（静止）、SCROLL_STATE_DRAGGING（上升）、SCROLL_STATE_SETTLING（下落）
+                if (newState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) { // 滚动静止时才加载图片资源，极大提升流畅度
+                    adapter.setScrolling(false);
+                    adapter.notifyDataSetChanged();
+                } else {
+                    adapter.setScrolling(true);
+                }
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+        });
+        try {  //给图片加载的时间
+            Thread.sleep(200);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         holder.tv_update_date.setText(apkDetail.getUpdate_date() + " 更新");
         holder.tv_apk_version.setText(apkGeneral.getApk_version() + " 版本");
@@ -205,12 +228,17 @@ public class AppInfoActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
+        boolean isScrolling = false;
         private Context mContext; // 声明一个上下文对象
         private List<String> screenshots; // 应用信息队列
 
         RecyclerViewAdapter(Context context, List<String> list) {
             mContext = context;
             screenshots = list;
+        }
+
+        void setScrolling(boolean scrolling) {
+            isScrolling = scrolling;
         }
 
         @NonNull
@@ -229,11 +257,14 @@ public class AppInfoActivity extends AppCompatActivity implements View.OnClickLi
         public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
             String image = screenshots.get(position);
 
-            Glide.with(mContext)
-                    .asBitmap()
-                    .load(image)
-                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(100)))
-                    .into(new GlideSizeTransformUtil(holder.iv_apk_screenshot, mContext));
+            if (!TextUtils.isEmpty(image) && !isScrolling) {
+                Glide.with(mContext)
+                        .asBitmap()
+                        .load(image)
+                        .apply(RequestOptions.bitmapTransform(new RoundedCorners(100)))
+                        .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                        .into(new GlideSizeTransformUtil(holder.iv_apk_screenshot, mContext));
+            }
         }
 
         @Override
