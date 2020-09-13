@@ -46,6 +46,9 @@ public class LaunchActivity extends AppCompatActivity {
                 }, 2000);
             }
             return true;
+            /**
+             * wu
+             */
         }
 
         return super.onKeyDown(keyCode, event);

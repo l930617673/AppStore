@@ -45,8 +45,6 @@ import top.lhjjjlxays.appstore.util.DataUtil;
 public class ApplicationMessageAdapter extends RecyclerView.Adapter<ApplicationMessageAdapter.ViewHolder> {
     private final static String TAG = ApplicationMessageAdapter.class.getSimpleName();
 
-    private String activityTag;
-
     private Context mContext; // 声明一个上下文对象
     private ArrayList<ApkGeneral> mApkGeneralList; // 应用信息队列
     private ArrayList<ApkInfo> mDownloadedApkList; // 已下载的APK文件队列

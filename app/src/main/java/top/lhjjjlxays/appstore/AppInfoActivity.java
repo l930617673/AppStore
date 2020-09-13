@@ -1,10 +1,8 @@
 package top.lhjjjlxays.appstore;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -26,9 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
 import com.lzy.okgo.OkGo;
@@ -50,6 +46,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.io.File;
 import java.text.DecimalFormat;
 import java.util.List;
+import java.util.Locale;
 
 import top.lhjjjlxays.appstore.bean.ApkDetail;
 import top.lhjjjlxays.appstore.bean.ApkGeneral;
@@ -57,14 +54,19 @@ import top.lhjjjlxays.appstore.util.ApkUtils;
 import top.lhjjjlxays.appstore.util.GlideSizeTransformUtil;
 import top.lhjjjlxays.appstore.util.NetworkUtils;
 
+/**
+ * @author lhj
+ * @version 1.0
+ * @date 2020/5/17 15:42
+ * @description 应用信息
+ */
 public class AppInfoActivity extends AppCompatActivity implements View.OnClickListener {
     private String TAG = AppInfoActivity.class.getSimpleName();
 
     private Context mContext;
     private ApkGeneral apkGeneral;
     private ApkDetail apkDetail;
-
-    private ViewHolder holder;
+    private ViewHolder holder;  //页面控件
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,10 +118,9 @@ public class AppInfoActivity extends AppCompatActivity implements View.OnClickLi
         holder.ll_apk_hide.setVisibility(View.GONE);
     }
 
-    @SuppressLint("DefaultLocale")
     public String stringFormat(String string) {
         double grade = Integer.parseInt(string) / 2.0;
-        return String.format("%.1f 分", grade);
+        return String.format(Locale.CHINA, "%.1f 分", grade);
     }
 
     private void initializeByOkGo() {
@@ -154,7 +155,6 @@ public class AppInfoActivity extends AppCompatActivity implements View.OnClickLi
                 });
     }
 
-    @SuppressLint("SetTextI18n")
     public void setInfo() {
         holder.tv_evaluate_number.setText(apkDetail.getEvaluate_number());
 
@@ -163,8 +163,7 @@ public class AppInfoActivity extends AppCompatActivity implements View.OnClickLi
         holder.rv_apk_screenshots.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
         holder.rv_apk_screenshots.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                // State的三种状态：SCROLL_STATE_IDLE（静止）、SCROLL_STATE_DRAGGING（上升）、SCROLL_STATE_SETTLING（下落）
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 if (newState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) { // 滚动静止时才加载图片资源，极大提升流畅度
                     adapter.setScrolling(false);
                     adapter.notifyDataSetChanged();
@@ -180,8 +179,8 @@ public class AppInfoActivity extends AppCompatActivity implements View.OnClickLi
             e.printStackTrace();
         }
 
-        holder.tv_update_date.setText(apkDetail.getUpdate_date() + " 更新");
-        holder.tv_apk_version.setText(apkGeneral.getApk_version() + " 版本");
+        holder.tv_update_date.setText(String.format(Locale.CHINA, "%s 更新", apkDetail.getUpdate_date()));
+        holder.tv_apk_version.setText(String.format(Locale.CHINA, "%s 版本", apkGeneral.getApk_version()));
         holder.et_apk_introduce.setText(apkDetail.getApk_introduce());
         holder.et_version_feature.setText(apkDetail.getVersion_feature());
         holder.tv_apk_developer.setText(apkDetail.getApk_developer());
